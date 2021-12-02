@@ -1,4 +1,17 @@
 module AdventOfCode2021
+	class SubmarineInstruction
+		attr_reader :direction, :amount
+
+		def initialize(direction, amount)
+			@direction = direction
+			@amount    = amount
+		end
+
+		def forward?
+			direction == :forward
+		end
+	end
+
 	class Submarine
 		attr_reader :course
 
@@ -10,17 +23,16 @@ module AdventOfCode2021
 					e[0] = e[0].to_sym
 					e[1] = e[1].to_i
 					e[1] = -e[1] if e[0] == :up
-
-					e
+					SubmarineInstruction.new(e[0], e[1])
 				end
 		end
 
 		def horizontal
-			@horizontal ||= course.select { |e| e[0] == :forward }.map { |e| e[1] }.sum
+			@horizontal ||= course.select { |e| e.forward? }.map { |e| e.amount }.sum
 		end
 
 		def vertical
-			@vertical ||= course.select { |e| %i(up down).include?(e[0]) }.map { |e| e[1] }.sum
+			@vertical ||= course.select { |e| %i(up down).include?(e.direction) }.map { |e| e.amount }.sum
 		end
 
 		def with_aim
@@ -29,11 +41,11 @@ module AdventOfCode2021
 			aim = 0
 
 			course.each do |step|
-				if step[0] == :forward
-					@horizontal += step[1]
-					@vertical += step[1] * aim
+				if step.forward?
+					@horizontal += step.amount
+					@vertical += step.amount * aim
 				else
-					aim += step[1]
+					aim += step.amount
 				end
 			end
 
