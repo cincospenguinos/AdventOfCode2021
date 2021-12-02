@@ -13,8 +13,6 @@ module AdventOfCode2021
 
 					e
 				end
-
-			@horizontal = nil
 		end
 
 		def horizontal
@@ -23,6 +21,23 @@ module AdventOfCode2021
 
 		def vertical
 			@vertical ||= course.select { |e| %i(up down).include?(e[0]) }.map { |e| e[1] }.sum
+		end
+
+		def with_aim
+			@horizontal = 0
+			@vertical = 0
+			aim = 0
+
+			course.each do |step|
+				if step[0] == :forward
+					@horizontal += step[1]
+					@vertical += step[1] * aim
+				else
+					aim += step[1]
+				end
+			end
+
+			@horizontal * @vertical
 		end
 	end
 end

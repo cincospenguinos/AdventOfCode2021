@@ -23,4 +23,14 @@ class SubmarineDepthsTest < Minitest::Test
 		submarine = AdventOfCode2021::Submarine.new(DAY_TWO_INPUT)
 		assert_equal 1692075, submarine.vertical * submarine.horizontal
 	end
+
+	def test_with_aim
+		submarine = AdventOfCode2021::Submarine.new(EXAMPLE_DIRECTIONS)
+		assert_equal 900, submarine.with_aim
+	end
+
+	def test_day_two_part_two_works
+		submarine = AdventOfCode2021::Submarine.new(DAY_TWO_INPUT)
+		assert_equal 1749524700, submarine.with_aim
+	end
 end
