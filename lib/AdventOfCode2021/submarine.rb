@@ -27,26 +27,36 @@ module AdventOfCode2021
 				end
 		end
 
-		def horizontal
-			@horizontal ||= course.select { |e| e.forward? }.map { |e| e.amount }.sum
-		end
-
-		def vertical
-			@vertical ||= course.select { |e| %i(up down).include?(e.direction) }.map { |e| e.amount }.sum
+		def without_aim
+			calculate do |step|
+				if step.forward?
+					@horizontal += step.amount
+				else
+					@vertical += step.amount
+				end
+			end
 		end
 
 		def with_aim
-			@horizontal = 0
-			@vertical = 0
-			aim = 0
-
-			course.each do |step|
+			calculate do |step|
 				if step.forward?
 					@horizontal += step.amount
-					@vertical += step.amount * aim
+					@vertical += step.amount * @aim
 				else
-					aim += step.amount
+					@aim += step.amount
 				end
+			end
+		end
+
+		private
+
+		def calculate
+			@horizontal = 0
+			@vertical   = 0
+			@aim = 0
+
+			course.each do |step|
+				yield step
 			end
 
 			@horizontal * @vertical

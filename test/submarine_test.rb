@@ -14,14 +14,12 @@ class SubmarineDepthsTest < Minitest::Test
 
 	def test_directions_work
 		submarine = AdventOfCode2021::Submarine.new(EXAMPLE_DIRECTIONS)
-		assert_equal 15, submarine.horizontal
-		assert_equal 10, submarine.vertical
-		assert_equal 150, submarine.horizontal * submarine.vertical
+		assert_equal 150, submarine.without_aim
 	end
 
 	def test_day_two_part_one_works
 		submarine = AdventOfCode2021::Submarine.new(DAY_TWO_INPUT)
-		assert_equal 1692075, submarine.vertical * submarine.horizontal
+		assert_equal 1692075, submarine.without_aim
 	end
 
 	def test_with_aim
