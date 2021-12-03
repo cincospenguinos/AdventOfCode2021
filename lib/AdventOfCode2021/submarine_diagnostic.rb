@@ -6,7 +6,7 @@ module AdventOfCode2021
       @frequency_hash = frequency_hash
     end
 
-    def most_frequent
+    def most_freq?
       return '0' if frequency_hash['0'] > frequency_hash['1']
       '1'
     end
@@ -14,6 +14,10 @@ module AdventOfCode2021
     def least_frequent
       return '1' if frequency_hash['0'] > frequency_hash['1']
       '0'
+    end
+
+    def same_freq?
+      frequency_hash['0'] == frequency_hash['1']
     end
   end
 
@@ -42,21 +46,44 @@ module AdventOfCode2021
       gamma * epsilon
     end
 
+    def oxygen_generator
+      bytes = bytes_str.clone
+
+      (0...byte_string_length).each do |idx|
+        bit_query = BitFrequencyQuery.new(frequency_hash_at(idx, bytes))
+        bytes = bytes.select do |e|
+          if bit_query.same_freq?
+            e[idx] == '1'
+          else
+            e[idx] == bit_query.most_freq?
+          end
+        end
+
+        break if bytes.size == 1
+      end
+
+      bytes[0].to_i(2)
+    end
+
     private
+
+    def byte_string_length
+      bytes_str[0].length
+    end
 
     def calculate_power
       @gamma = ''
       @epsilon = ''
 
-      (0...bytes_str[0].length).each do |index|
-        bit_query = BitFrequencyQuery.new(frequency_hash_for(index))
-        @gamma += bit_query.most_frequent
+      (0...byte_string_length).each do |idx|
+        bit_query = BitFrequencyQuery.new(frequency_hash_at(idx))
+        @gamma += bit_query.most_freq?
         @epsilon += bit_query.least_frequent
       end
     end
 
-    def frequency_hash_for(index)
-      bytes_str.map { |e| e[index] }
+    def frequency_hash_at(idx, array = bytes_str)
+      array.map { |e| e[idx] }
         .group_by(&:itself)
         .transform_values(&:size)
     end

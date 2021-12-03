@@ -37,4 +37,9 @@ class SubmarineDiagnosticTest < Minitest::Test
     diagnostic = AdventOfCode2021::SubmarineDiagnostic.new(DAY_THREE_INPUT)
     assert_equal 3847100, diagnostic.power_consumption
   end
+
+  def test_diagnostic_oxygen_generator
+    diagnostic = AdventOfCode2021::SubmarineDiagnostic.new(EXAMPLE_INPUT)
+    assert_equal 23, diagnostic.oxygen_generator
+  end
 end
