@@ -20,4 +20,9 @@ class SubmarineDiagnosticTest < Minitest::Test
     diagnostic = AdventOfCode2021::SubmarineDiagnostic.new(EXAMPLE_INPUT)
     assert_equal 22, diagnostic.gamma
   end
+
+  def test_diagnostic_calculates_epsilon
+    diagnostic = AdventOfCode2021::SubmarineDiagnostic.new(EXAMPLE_INPUT)
+    assert_equal 9, diagnostic.epsilon
+  end
 end
