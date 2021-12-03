@@ -42,4 +42,19 @@ class SubmarineDiagnosticTest < Minitest::Test
     diagnostic = AdventOfCode2021::SubmarineDiagnostic.new(EXAMPLE_INPUT)
     assert_equal 23, diagnostic.oxygen_generator
   end
+
+  def test_diagnostic_co2_scrubber
+    diagnostic = AdventOfCode2021::SubmarineDiagnostic.new(EXAMPLE_INPUT)
+    assert_equal 10, diagnostic.co2_scrubber
+  end
+
+  def test_life_support_example
+    diagnostic = AdventOfCode2021::SubmarineDiagnostic.new(EXAMPLE_INPUT)
+    assert_equal 230, diagnostic.life_support
+  end
+
+  def test_answers_part_two
+    diagnostic = AdventOfCode2021::SubmarineDiagnostic.new(DAY_THREE_INPUT)
+    assert_equal 4105235, diagnostic.life_support
+  end
 end

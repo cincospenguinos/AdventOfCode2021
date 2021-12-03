@@ -6,7 +6,7 @@ module AdventOfCode2021
       @frequency_hash = frequency_hash
     end
 
-    def most_freq?
+    def most_freq
       return '0' if frequency_hash['0'] > frequency_hash['1']
       '1'
     end
@@ -47,28 +47,45 @@ module AdventOfCode2021
     end
 
     def oxygen_generator
-      bytes = bytes_str.clone
-
-      (0...byte_string_length).each do |idx|
-        bit_query = BitFrequencyQuery.new(frequency_hash_at(idx, bytes))
-        bytes = bytes.select do |e|
-          if bit_query.same_freq?
-            e[idx] == '1'
-          else
-            e[idx] == bit_query.most_freq?
-          end
+      @oxygen_generator ||= calculate_life_support_attr do |bit_query, e|
+        if bit_query.same_freq?
+          e == '1'
+        else
+          e == bit_query.most_freq
         end
-
-        break if bytes.size == 1
       end
+    end
 
-      bytes[0].to_i(2)
+    def co2_scrubber
+      @co2_scrubber ||= calculate_life_support_attr do |bit_query, e|
+        if bit_query.same_freq?
+          e == '0'
+        else
+          e == bit_query.least_frequent
+        end
+      end
+    end
+
+    def life_support
+      oxygen_generator * co2_scrubber
     end
 
     private
 
+    def calculate_life_support_attr
+      bytes = bytes_str.clone
+
+      (0...byte_string_length).each do |idx|
+        bit_query = BitFrequencyQuery.new(frequency_hash_at(idx, bytes))
+        bytes = bytes.select { |e| yield bit_query, e[idx] }
+        break if bytes.size == 1
+      end
+
+      bytes.first.to_i(2)
+    end
+
     def byte_string_length
-      bytes_str[0].length
+      bytes_str.first.length
     end
 
     def calculate_power
@@ -77,7 +94,7 @@ module AdventOfCode2021
 
       (0...byte_string_length).each do |idx|
         bit_query = BitFrequencyQuery.new(frequency_hash_at(idx))
-        @gamma += bit_query.most_freq?
+        @gamma += bit_query.most_freq
         @epsilon += bit_query.least_frequent
       end
     end
