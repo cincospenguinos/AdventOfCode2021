@@ -53,6 +53,15 @@ class SubmarineBingoTest < Minitest::Test
     assert board.draw(15)
   end
 
+  def test_bingo_board_gives_correct_score
+    input = AdventOfCode2021::BingoInputExtraction.new(EXAMPLE_INPUT)
+    board = input.boards.last
+    [7,4,9,5,11,17,23,2,0,14,21,24].each { |num| board.draw(num) }
+
+    assert board.solved?
+    assert_equal 188, board.score
+  end
+
   def test_answers_first_part_correctly
     skip 'Getting the other things worked out'
     bingo = AdventOfCode2021::SubmarineBingo.new(EXAMPLE_INPUT)

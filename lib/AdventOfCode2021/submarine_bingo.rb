@@ -4,6 +4,8 @@ module AdventOfCode2021
   class BingoBoard
     BOARD_SIZE = 5
 
+    attr_reader :board
+
     def initialize(board_lines)
       @board = board_lines.join(' ').split(/\s+/).map(&:to_i)
       @drawn_numbers = []
@@ -11,8 +13,8 @@ module AdventOfCode2021
     end
 
     def draw(number)
-      if (idx = @board.index(number))
-        xy = to_xy(idx)
+      if (idx = board.index(number))
+        xy = to_xy(idx, number)
         @drawn_numbers << xy
       end
 
@@ -22,20 +24,29 @@ module AdventOfCode2021
     def solved?
       return true if @solved
       @solved ||= (0...BOARD_SIZE).map { |num|
-        row_size = @drawn_numbers.select { |p| p.y == num }.size
-        col_size = @drawn_numbers.select { |p| p.x == num }.size
+        row_size = drawn_row_at(num).size
+        col_size = drawn_col_at(num).size
         row_size == BOARD_SIZE || col_size == BOARD_SIZE
       }.include?(true)
     end
 
-    private
-
-    def to_xy(index)
-      OpenStruct.new(x: index % BOARD_SIZE, y: index / BOARD_SIZE)
+    def score
+      marked_numbers = @drawn_numbers.map(&:value)
+      board.reject { |i| marked_numbers.include?(i) }.sum
     end
 
-    def to_index(xy)
-      y * BOARD_SIZE + x
+    private
+
+    def drawn_row_at(num)
+      @drawn_numbers.select { |p| p.y == num }
+    end
+
+    def drawn_col_at(num)
+      @drawn_numbers.select { |p| p.x == num }
+    end
+
+    def to_xy(index, value)
+      OpenStruct.new(x: index % BOARD_SIZE, y: index / BOARD_SIZE, value: value)
     end
   end
 
