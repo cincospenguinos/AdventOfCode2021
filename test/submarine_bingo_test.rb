@@ -62,9 +62,13 @@ class SubmarineBingoTest < Minitest::Test
     assert_equal 188, board.score
   end
 
-  def test_answers_first_part_correctly
-    skip 'Getting the other things worked out'
+  def test_answers_first_part_example
     bingo = AdventOfCode2021::SubmarineBingo.new(EXAMPLE_INPUT)
-    assert_equal 4512, bingo.winning_score
+    assert_equal 4512, bingo.first_winning_score
+  end
+
+  def test_answers_part_one
+    bingo = AdventOfCode2021::SubmarineBingo.new(DAY_FOUR_INPUT)
+    assert_equal 14093, bingo.first_winning_score
   end
 end

@@ -61,10 +61,21 @@ module AdventOfCode2021
   end
 
   class SubmarineBingo
+    attr_reader :boards, :number_sequence
+
     def initialize(input)
+      extraction = BingoInputExtraction.new(input)
+      @boards = extraction.boards
+      @number_sequence = extraction.number_sequence
     end
 
-    def winning_score
+    def first_winning_score
+      number_sequence.each do |number|
+        winners = boards.map { |b| b.draw(number) }
+        if winners.include?(true)
+          return boards[winners.index(true)].score * number
+        end
+      end
     end
   end
 end
