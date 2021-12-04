@@ -31,6 +31,28 @@ class SubmarineBingoTest < Minitest::Test
     assert_equal 3, input.boards.size
   end
 
+  def test_bingo_board_wins_horizontally
+    input = AdventOfCode2021::BingoInputExtraction.new(EXAMPLE_INPUT)
+    board = input.boards.first
+
+    refute board.draw(0)
+    refute board.draw(11)
+    refute board.draw(17)
+    refute board.draw(13)
+    assert board.draw(22)
+  end
+
+  def test_bingo_board_wins_vertically
+    input = AdventOfCode2021::BingoInputExtraction.new(EXAMPLE_INPUT)
+    board = input.boards.first
+
+    refute board.draw(11)
+    refute board.draw(4)
+    refute board.draw(16)
+    refute board.draw(18)
+    assert board.draw(15)
+  end
+
   def test_answers_first_part_correctly
     skip 'Getting the other things worked out'
     bingo = AdventOfCode2021::SubmarineBingo.new(EXAMPLE_INPUT)
