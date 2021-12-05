@@ -7,7 +7,10 @@ module AdventOfCode2021
     attr_reader :board
 
     def initialize(board_lines)
-      @board = board_lines.join(' ').split(/\s+/).map(&:to_i)
+      @board = board_lines.join(' ')
+        .split(/\s+/)
+        .reject { |s| s.empty? }
+        .map(&:to_i)
       @drawn_numbers = []
       @solved = false
     end
@@ -70,10 +73,28 @@ module AdventOfCode2021
     end
 
     def first_winning_score
+      enumerate_winners do |winners, number|
+        return winners.first.score * number
+      end
+    end
+
+    def last_winning_score
+      enumerate_winners do |winners, number|
+        # TODO: This
+      end
+    end
+
+    private
+
+    def enumerate_winners
       number_sequence.each do |number|
-        winners = boards.map { |b| b.draw(number) }
-        if winners.include?(true)
-          return boards[winners.index(true)].score * number
+        step = boards.each_with_index.map { |b, idx| OpenStruct.new(won: b.draw(number), index: idx) }
+
+        if step.map(&:won).include?(true)
+          winners = step.select { |b| b.won }
+            .map(&:index)
+            .map { |i| boards[i] }
+          yield winners, number
         end
       end
     end

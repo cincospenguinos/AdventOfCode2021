@@ -29,6 +29,7 @@ class SubmarineBingoTest < Minitest::Test
     input = AdventOfCode2021::BingoInputExtraction.new(EXAMPLE_INPUT)
     assert_equal [7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1], input.number_sequence
     assert_equal 3, input.boards.size
+    input.boards.map(&:board).map(&:size).each { |s| assert_equal 25, s }
   end
 
   def test_bingo_board_wins_horizontally
@@ -70,5 +71,18 @@ class SubmarineBingoTest < Minitest::Test
   def test_answers_part_one
     bingo = AdventOfCode2021::SubmarineBingo.new(DAY_FOUR_INPUT)
     assert_equal 14093, bingo.first_winning_score
+  end
+
+  def test_answers_second_part_example
+    skip 'TODO: This'
+    bingo = AdventOfCode2021::SubmarineBingo.new(EXAMPLE_INPUT)
+    assert_equal 1924, bingo.last_winning_score
+  end
+
+  def test_answers_part_two
+    skip 'TODO: This'
+    bingo = AdventOfCode2021::SubmarineBingo.new(DAY_FOUR_INPUT)
+    refute_equal 38406, bingo.last_winning_score
+    assert_equal 0, bingo.last_winning_score
   end
 end
