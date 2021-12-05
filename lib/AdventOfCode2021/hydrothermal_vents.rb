@@ -1,17 +1,16 @@
 module AdventOfCode2021
   class HydrothermalGrid
     attr_reader :grid
-    attr_accessor :filter_diagonals
 
     def initialize(size)
       @grid = []
       size.times { @grid << Array.new(size, 0) }
-      @filter_diagonals = true
     end
 
     def add(segment)
-      return if segment.diagonal? && !filter_diagonals
-      segment.points.each { |p| add_intersection_at(p) }
+      segment.points.each do |p|
+        add_intersection_at(p)
+      end
     end
 
     def overlapping_segments_at_or_above(amount)
@@ -28,7 +27,7 @@ module AdventOfCode2021
     private
 
     def add_intersection_at(p)
-      @grid[p.x][p.y] += 1
+      @grid[p.y][p.x] += 1
     end
   end
 
@@ -36,8 +35,13 @@ module AdventOfCode2021
     attr_reader :start, :finish
 
     def initialize(point_a, point_b)
-      @start = point_a
-      @finish = point_b
+      if point_a.x < point_b.x
+        @start = point_a
+        @finish = point_b
+      else
+        @start = point_b
+        @finish = point_a
+      end
     end
 
     def points
@@ -46,12 +50,19 @@ module AdventOfCode2021
       elsif vertical?
         range_y.map { |y| OpenStruct.new(x: start.x, y: y) }
       else
-        []
+        range_x.each_with_index.map do |x, idx|
+          y = idx * slope
+          OpenStruct.new(x: x, y: y)
+        end
       end
     end
 
     def diagonal?
-      !horizontal? || !vertical?
+      !horizontal? && !vertical?
+    end
+
+    def to_s
+      "#{start.x},#{start.y} -> #{finish.x},#{finish.y}"
     end
 
     private
@@ -65,7 +76,6 @@ module AdventOfCode2021
     end
 
     def range_x
-      return finish.x..start.x if start.x > finish.x
       start.x..finish.x
     end
 
@@ -73,14 +83,20 @@ module AdventOfCode2021
       return finish.y..start.y if start.y > finish.y
       start.y..finish.y
     end
+
+    def slope
+      return 0 if horizontal? || vertical?
+      return 1 if start.y > finish.y
+      -1
+    end
   end
 
   class HydrothermalVents
-    attr_reader :grid, :points
+    attr_reader :grid, :segments
 
     def initialize(input)
       @grid = HydrothermalGrid.new(maximum_dimension(input))
-      @points = input.each_line.map do |segment_data|
+      @segments = input.each_line.map do |segment_data|
         points = segment_data.gsub(/\s+/, '')
           .split('->')
           .map { |p| p.split(',').map(&:to_i) }
@@ -89,14 +105,10 @@ module AdventOfCode2021
       end
     end
 
-    def overlapping_segments(amount)
-      points.each { |p| grid.add(p) }
+    def overlapping_segments(amount, diagonals = false)
+      diagonals ? to_add = segments : to_add = segments.reject(&:diagonal?)
+      to_add.each { |p| grid.add(p) }
       grid.overlapping_segments_at_or_above(amount)
-    end
-
-    def overlapping_with_diagonals(amount)
-      grid.filter_diagonals = false
-      overlapping_segments(amount)
     end
 
     private

@@ -16,17 +16,6 @@ class HydrothermalVentsTest < Minitest::Test
 
   DAY_FIVE_INPUT = File.open('test/test_data/day_five.txt', 'r', &:read)
 
-  def test_grid_works
-    segment = AdventOfCode2021::HydrothermalSegment.new(test_point(0, 0), test_point(0, 2))
-    grid = AdventOfCode2021::HydrothermalGrid.new(3)
-    grid.add(segment)
-
-    assert_equal 1, grid.grid[0][0]
-    assert_equal 1, grid.grid[0][1]
-    assert_equal 1, grid.grid[0][2]
-    assert_equal 0, grid.grid[1][0]
-  end
-
   def test_first_example_works
     vents = AdventOfCode2021::HydrothermalVents.new(EXAMPLE_INPUT)
     assert_equal 5, vents.overlapping_segments(2)
@@ -39,7 +28,11 @@ class HydrothermalVentsTest < Minitest::Test
 
   def test_first_example_part_two
     vents = AdventOfCode2021::HydrothermalVents.new(EXAMPLE_INPUT)
-    assert_equal 12, vents.overlapping_with_diagonals(2)
+
+    vents.overlapping_segments(2, true)
+    puts "\n#{vents.grid}\n"
+
+    # assert_equal 12, vents.overlapping_segments(2, true)
   end
 
   private
