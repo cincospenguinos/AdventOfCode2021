@@ -1,16 +1,16 @@
 module AdventOfCode2021
   class HydrothermalGrid
     attr_reader :grid
-    attr_accessor :diagonals
+    attr_accessor :filter_diagonals
 
     def initialize(size)
       @grid = []
       size.times { @grid << Array.new(size, 0) }
-      @diagonals = false
+      @filter_diagonals = true
     end
 
     def add(segment)
-      # return if !diagonals && segment.diagonal?
+      return if segment.diagonal? && !filter_diagonals
       segment.points.each { |p| add_intersection_at(p) }
     end
 
@@ -95,7 +95,7 @@ module AdventOfCode2021
     end
 
     def overlapping_with_diagonals(amount)
-      grid.diagonals = true
+      grid.filter_diagonals = false
       overlapping_segments(amount)
     end
 
