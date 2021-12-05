@@ -17,11 +17,13 @@ class HydrothermalVentsTest < Minitest::Test
   DAY_FIVE_INPUT = File.open('test/test_data/day_five.txt', 'r', &:read)
 
   def test_first_example_works
+    skip 'yo'
     vents = AdventOfCode2021::HydrothermalVents.new(EXAMPLE_INPUT)
     assert_equal 5, vents.overlapping_segments(2)
   end
 
   def test_first_day_works
+    skip 'yo'
     vents = AdventOfCode2021::HydrothermalVents.new(DAY_FIVE_INPUT)
     assert_equal 5774, vents.overlapping_segments(2)
   end
@@ -29,10 +31,10 @@ class HydrothermalVentsTest < Minitest::Test
   def test_first_example_part_two
     vents = AdventOfCode2021::HydrothermalVents.new(EXAMPLE_INPUT)
 
-    vents.overlapping_segments(2, true)
-    puts "\n#{vents.grid}\n"
+    # vents.overlapping_segments(2, true)
+    # puts "\n#{vents.grid}\n"
 
-    # assert_equal 12, vents.overlapping_segments(2, true)
+    assert_equal 12, vents.overlapping_segments(2, true)
   end
 
   private

@@ -8,6 +8,7 @@ module AdventOfCode2021
     end
 
     def add(segment)
+      binding.pry if segment.points.include?(OpenStruct.new(x: 2, y: 8))
       segment.points.each do |p|
         add_intersection_at(p)
       end
@@ -65,6 +66,12 @@ module AdventOfCode2021
       "#{start.x},#{start.y} -> #{finish.x},#{finish.y}"
     end
 
+    def slope
+      return 0 if horizontal? || vertical?
+      return 1 if start.y < finish.y
+      -1
+    end
+
     private
 
     def horizontal?
@@ -82,12 +89,6 @@ module AdventOfCode2021
     def range_y
       return finish.y..start.y if start.y > finish.y
       start.y..finish.y
-    end
-
-    def slope
-      return 0 if horizontal? || vertical?
-      return 1 if start.y > finish.y
-      -1
     end
   end
 
