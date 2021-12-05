@@ -1,20 +1,17 @@
 module AdventOfCode2021
   class HydrothermalGrid
     attr_reader :grid
+    attr_accessor :diagonals
 
     def initialize(size)
       @grid = []
       size.times { @grid << Array.new(size, 0) }
+      @diagonals = false
     end
 
     def add(segment)
-      if segment.vertical?
-        segment.range_x.each { |x| add_intersection_at(x, segment.start.y) }
-      elsif segment.horizontal?
-        segment.range_y.each { |y| add_intersection_at(segment.start.x, y) }
-      else
-        # TODO: What do?
-      end
+      # return if !diagonals && segment.diagonal?
+      segment.points.each { |p| add_intersection_at(p) }
     end
 
     def overlapping_segments_at_or_above(amount)
@@ -30,8 +27,8 @@ module AdventOfCode2021
 
     private
 
-    def add_intersection_at(x, y)
-      @grid[x][y] += 1
+    def add_intersection_at(p)
+      @grid[p.x][p.y] += 1
     end
   end
 
@@ -43,12 +40,28 @@ module AdventOfCode2021
       @finish = point_b
     end
 
+    def points
+      if horizontal?
+        range_x.map { |x| OpenStruct.new(x: x, y: start.y) }
+      elsif vertical?
+        range_y.map { |y| OpenStruct.new(x: start.x, y: y) }
+      else
+        []
+      end
+    end
+
+    def diagonal?
+      !horizontal? || !vertical?
+    end
+
+    private
+
     def horizontal?
-      start.x == finish.x
+      start.y == finish.y
     end
 
     def vertical?
-      start.y == finish.y
+      start.x == finish.x
     end
 
     def range_x
@@ -79,6 +92,11 @@ module AdventOfCode2021
     def overlapping_segments(amount)
       points.each { |p| grid.add(p) }
       grid.overlapping_segments_at_or_above(amount)
+    end
+
+    def overlapping_with_diagonals(amount)
+      grid.diagonals = true
+      overlapping_segments(amount)
     end
 
     private
