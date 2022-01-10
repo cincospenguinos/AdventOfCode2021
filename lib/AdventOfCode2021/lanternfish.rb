@@ -24,7 +24,6 @@ module AdventOfCode2021
     end
 
     def after(days)
-      days_elapsed = 0
       fish = initial_fish
       days.times  { fish += process(fish) }
       fish.size
